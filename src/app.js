@@ -1,13 +1,12 @@
-import './assets/scss/app.scss';
 import $ from 'cash-dom';
+import './assets/scss/app.scss';
 import { githubProfileValidation } from './helpers/validation';
-
+import { getGithubProfile, getGithubHistory } from './services/githubServices';
+import timelineGenerator from './components/timeline/timeline';
 
 export class App {
   initializeApp() {
-    let self = this;
-
-    $('.load-username').on('click', function (e) {
+    $('.load-username').on('click', () => {
       const userNameInput = $('.username.input');
       const userName = userNameInput.val();
 
@@ -18,21 +17,32 @@ export class App {
         return false;
       }
 
-      fetch('https://api.github.com/users/' + userName)
-        .then((response)=> response.json())
-        .then(function (body) {
-          self.profile = body;
-          self.update_profile();
+      getGithubProfile(userName)
+        .then((data) => {
+          this.updateProfile(data);
+          getGithubHistory(userName).then((data) => this.updateHistory(data));
         })
-
-    })
-
+    });
   }
 
-  update_profile() {
-    $('#profile-name').text($('.username.input').val())
-    $('#profile-image').attr('src', this.profile.avatar_url)
-    $('#profile-url').attr('href', this.profile.html_url).text(this.profile.login)
-    $('#profile-bio').text(this.profile.bio || '(no information)')
+  /**
+   * Update information about github profile like name, url, avatar, bio
+   *
+   * @param {object} profile - object with profile information
+   */
+  updateProfile(profile) {
+    $('#profile-name').text(profile.login);
+    $('#profile-image').attr('src', profile.avatar_url);
+    $('#profile-url').attr('href', profile.html_url).text(`@${profile.login}`);
+    $('#profile-bio').text(profile.bio || '(no information)');
+  }
+  
+  /**
+   * Update history timeline with profile events
+   *
+   * @param {object} history - object with history events of github profile
+   */
+  updateHistory(history) {
+    timelineGenerator(history);
   }
 }
