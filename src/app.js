@@ -1,5 +1,6 @@
 import './assets/scss/app.scss';
 import $ from 'cash-dom';
+import { githubProfileValidation } from './helpers/validation';
 
 
 export class App {
@@ -7,7 +8,15 @@ export class App {
     let self = this;
 
     $('.load-username').on('click', function (e) {
-      let userName = $('.username.input').val();
+      const userNameInput = $('.username.input');
+      const userName = userNameInput.val();
+
+      /**
+       * If github profile name is not valid escape and don't send fetch
+       */
+      if (!githubProfileValidation(userNameInput)) {
+        return false;
+      }
 
       fetch('https://api.github.com/users/' + userName)
         .then((response)=> response.json())

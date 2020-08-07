@@ -1,9 +1,16 @@
 @import "~bulma";
 @import "~bulma-timeline";
+@import './colors.scss';
 
 .navbar {
   border-bottom: 1px solid #eee;
   margin-bottom: 8px;
+  
+  .username {
+    &.is-error {
+      border-color: $cl-error;
+    }
+  }
 }
 
 .gh-username img{
