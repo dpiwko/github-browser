@@ -6,6 +6,8 @@ import timelineGenerator from './components/timeline/timeline';
 
 export class App {
   initializeApp() {
+    const loader = $('.loader');
+    
     $('.load-username').on('click', () => {
       const userNameInput = $('.username.input');
       const userName = userNameInput.val();
@@ -16,12 +18,20 @@ export class App {
       if (!githubProfileValidation(userNameInput)) {
         return false;
       }
+      
+      loader.removeClass('is-hidden');
 
       getGithubProfile(userName)
         .then((data) => {
           this.updateProfile(data);
-          getGithubHistory(userName).then((data) => this.updateHistory(data));
-        })
+          getGithubHistory(userName)
+            .then((data) => {
+              this.updateHistory(data);
+            })
+            .finally(() => {
+              loader.addClass('is-hidden');
+            });
+        });
     });
   }
 
