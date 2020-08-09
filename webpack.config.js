@@ -9,35 +9,28 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const extractPlugin = new ExtractTextPlugin({ filename: './assets/css/app.[hash:6].min.css' });
 
 const config = {
-
   context: path.resolve(__dirname, 'src'),
 
   entry: {
-    app: './index.js'
+    app: './index.js',
   },
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: './assets/js/[name].[hash:6].min.js'
+    filename: './assets/js/[name].[hash:6].min.js',
   },
 
   module: {
     rules: [
-
       {
         test: /\.js$/,
         include: /src/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ['env']
-          }
-        }
+        use: ['babel-loader'],
       },
       {
         test: /\.html$/,
-        use: ['html-loader']
+        use: ['html-loader'],
       },
       {
         test: /\.s?css$/,
@@ -47,16 +40,17 @@ const config = {
               loader: 'css-loader',
               options: {
                 sourceMap: !IS_PRODUCTION,
-              }
-            }, {
+              },
+            },
+            {
               loader: 'sass-loader',
               options: {
                 sourceMap: !IS_PRODUCTION,
-              }
-            }
+              },
+            },
           ],
-          fallback: 'style-loader'
-        })
+          fallback: 'style-loader',
+        }),
       },
       {
         test: /\.(jpg|png|gif|svg)$/,
@@ -65,34 +59,33 @@ const config = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: './assets/media/'
-            }
-          }
-        ]
+              outputPath: './assets/media/',
+            },
+          },
+        ],
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: ['file-loader']
-      }
-
-    ]
+        use: ['file-loader'],
+      },
+    ],
   },
 
   plugins: [
     new CleanWebpackPlugin(['dist']),
-    new HtmlWebpackPlugin({template: 'index.html'}),
-    extractPlugin
+    new HtmlWebpackPlugin({ template: 'index.html' }),
+    extractPlugin,
   ],
 
   devServer: {
-    contentBase: path.resolve(__dirname, "./dist/assets/media"),
+    contentBase: path.resolve(__dirname, './dist/assets/media'),
     compress: true,
     port: 2000,
     stats: 'errors-only',
-    open: true
+    open: false,
   },
 
-  devtool: IS_PRODUCTION ? false : 'inline-source-map'
+  devtool: IS_PRODUCTION ? false : 'inline-source-map',
 };
 
 module.exports = config;
