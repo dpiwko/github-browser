@@ -4,7 +4,9 @@ const path = require('path'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const extractPlugin = new ExtractTextPlugin({filename: './assets/css/app.css'});
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
+const extractPlugin = new ExtractTextPlugin({ filename: './assets/css/app.[hash:6].min.css' });
 
 const config = {
 
@@ -16,7 +18,7 @@ const config = {
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: './assets/js/[name].bundle.js'
+    filename: './assets/js/[name].[hash:6].min.js'
   },
 
   module: {
@@ -44,12 +46,12 @@ const config = {
             {
               loader: 'css-loader',
               options: {
-                sourceMap: true
+                sourceMap: !IS_PRODUCTION,
               }
             }, {
               loader: 'sass-loader',
               options: {
-                sourceMap: true
+                sourceMap: !IS_PRODUCTION,
               }
             }
           ],
@@ -90,8 +92,7 @@ const config = {
     open: true
   },
 
-  devtool: 'inline-source-map'
-
+  devtool: IS_PRODUCTION ? false : 'inline-source-map'
 };
 
 module.exports = config;
