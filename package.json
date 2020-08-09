@@ -6,7 +6,7 @@
   "homepage": "https://dpiwko.github.io/github-browser",
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d dist",
     "start": "./node_modules/.bin/webpack-dev-server",
     "build": "NODE_ENV=production ./node_modules/.bin/webpack -p",
     "watch": "./node_modules/.bin/webpack --watch"
